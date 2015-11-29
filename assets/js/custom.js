@@ -1,4 +1,10 @@
 jQuery(document).ready(function(){
+  $('.selectpicker').selectpicker('deselectAll');
+  $('.selectpicker').selectpicker();
+
+  $(document.body).on('click','.dropdown-menu.inner.selectpicker li', function () {
+
+  });
 
   // for donut chart
   Morris.Donut({
@@ -12,6 +18,17 @@ jQuery(document).ready(function(){
     formatter: function (x, data) { return data.formatted; }
   });
 
+  //for filter and get the value
+  $('.filterCss').on('click', '.filterval', function() {
+    var element = $(this);
+    var value = element.data("val");
+    var type = element.data("type");
+    var text = element.text();
+    $('.'+type+' .glyphicon-ok').hide();
+    element.empty().html('<span class="glyphicon glyphicon-ok"></span> '+text);
+
+  });
+
   $(".toggelPlace").on('click',function(){
       var element = $(this);
       var place = element.attr("place");
@@ -20,32 +37,48 @@ jQuery(document).ready(function(){
 
 });
 
+/* comman selector for multiple selector */
+function commaSelector(selectorField)
+{
+    var selectorArray = [];
+
+    $('#'+selectorField+' :checked').each(function (i, selected) {
+        selectorArray[i] = $(selected).val();
+    });
+
+    $("input[name='"+selectorField+"']").val(selectorArray.join(","));
+
+    // get graph
+    $.getJSON("http://192.168.2.248/index.php?filter=1", function( json ) {
+
+    $.each(json, function(i, item) {
+        $( "#"+type ).append('<option value="'+item+'">'+item+'</option>');
+      });
+    }, "jsonp");
+
+}
 
 getingFilters('appsiteids');
 
 // function for getting the filters value
 function getingFilters(type='') {
 
-  $.getJSON( "json/"+type+".json", function( json ) {
+  $.getJSON("http://192.168.2.248/index.php?filter=1", function( json ) {
+
     $.each(json, function(i, item) {
-      $( "."+type ).append('<div  onclick="getGrapData();">'+item+'</div>');
+      $( "#"+type ).append('<option value="'+item+'">'+item+'</option>');
     });
-  });
+  }, "jsonp");
+
+  $("#"+type).selectpicker('refresh');
 
 }
-
-// for getting the graph data
-/*function getGrapData(this){
-  //$this =
-}
-
-*/
 
 // for google heat map
   var map, heatmap;
 
   function initMap(place='') {
-    console.log(place);
+
     var latlng = new google.maps.LatLng(37.09024, -95.712891);
     map = new google.maps.Map(document.getElementById('heatmap'), {
       zoom: 3,
@@ -58,7 +91,7 @@ function getingFilters(type='') {
     if(place == ''){
       place = 'airport';
     }
-    console.log(place);
+
     var service = new google.maps.places.PlacesService(map);
 
     service.nearbySearch({
@@ -68,8 +101,6 @@ function getingFilters(type='') {
       }, callback);
 
     function callback(results, status) {
-      console.log(results);
-
       if (status === google.maps.places.PlacesServiceStatus.OK) {
         for (var i = 0; i < results.length; i++) {
           createMarker(results[i]);
