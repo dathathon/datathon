@@ -10,6 +10,9 @@
 		<!-- bootstrap framework -->
 		<link href="assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
 
+
+		<link href="assets/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" media="screen">
+
 		<!-- custom icons -->
 			<!-- font awesome icons -->
 			<link href="assets/icons/font-awesome/css/font-awesome.min.css" rel="stylesheet" media="screen">
@@ -46,6 +49,11 @@
 				line-height: 16px;
 				height: 200px;
 				overflow: auto;
+				cursor: pointer;
+				padding: 0px 0px 0px 12px;
+			}
+			.panelheadercss {
+				padding-bottom: 6px;
 			}
 		</style>
     </head>
@@ -129,26 +137,39 @@
 							<div class="row">
 								<div class="col-md-6">
 									<div class="panel panel-default">
-										<div class="panel-header">
-											App ID
+										<div class="panel-header panelheadercss">
+											Category
 										</div>
-										<div class="panel-body appsiteids filterCss">
 
+										<div class="panel-body">
+											<input type="text" name="appsiteids"  >
+											<select id="appsiteids" class="selectpicker" multiple  data-live-search="true" onchange="commaSelector('appsiteids')">
+
+										  </select>
 										</div>
 									</div>
 								</div>
 								<div class="col-md-6">
 									<div class="panel panel-default">
-										<div class="panel-header">
-											Avg bid wins
+										<div class="panel-header panelheadercss">
+											Time
 										</div>
-										<div class="panel-body filterCss appsiteids">
+										<input type="text" name="time" >
+										<div class="panel-body">
+											<select id="time" class="selectpicker" multiple  data-live-search="true" onchange="commaSelector('time')">
+										    <?php
+										    	foreach(range(intval('00:00:00'),intval('23:00:00')) as $time) {
+										    		$ap = (date("H", mktime($time+1)) < 12)? "AM" : "PM";
+													  echo '<option value="'.date("H", mktime($time+1)).'">'.date("H:00", mktime($time+1)).' '.$ap.'</option>';
+													}
 
-										</div>
+										    ?>
+										  </select>
 										</div>
 									</div>
-								</div><!-- ending row -->
-								<div class="row">
+								</div>
+							</div><!-- ending row -->
+							<!-- div class="row">
 								<div class="col-md-6">
 									<div class="panel panel-default">
 										<div class="panel-header">
@@ -183,8 +204,8 @@
 										</div>
 										</div>
 									</div>
-								</div><!-- ending row -->
-								<div class="row">
+								</div> --><!-- ending row -->
+								<!-- <div class="row">
 								<div class="col-md-6">
 									<div class="panel panel-default">
 										<div class="panel-header">
@@ -219,7 +240,7 @@
 										</div>
 										</div>
 									</div>
-								</div><!-- ending row -->
+								</div> --><!-- ending row -->
 							</div>
 						</div>
 					</div>
@@ -362,6 +383,11 @@
 		<!-- morries charts -->
 		<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
 		<script src="assets/morris/morris.min.js"></script>
+
+
+		<script src="assets/bootstrap-select/js/bootstrap-select.min.js"></script>
+
+
 
 	<!-- page specific plugins -->
 
